@@ -122,9 +122,7 @@ function App() {
                 password={password}
                 setPassword={setPassword}
                 users={users}
-                loginn={loginn}
                 setLoginn={setLoginn}
-                currentUser={currentUser}
                 setCurrentUser={setCurrentUser}
               />
             }

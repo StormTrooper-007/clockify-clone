@@ -7,9 +7,7 @@ type Props = {
   password: string;
   setPassword: React.Dispatch<React.SetStateAction<any>>;
   users: any[];
-  loginn: boolean;
   setLoginn: React.Dispatch<React.SetStateAction<any>>;
-  currentUser: any;
   setCurrentUser: React.Dispatch<React.SetStateAction<any>>;
 };
 
@@ -19,13 +17,14 @@ function Login({
   password,
   setPassword,
   users,
-  loginn,
   setLoginn,
-  currentUser,
   setCurrentUser,
 }: Props) {
+
   const navigate = useNavigate();
 
+
+  
   const login = (email: any, password: any) => {
     if(email==="" && password==="") return 
     const user = users.find(
@@ -38,6 +37,8 @@ function Login({
       navigate("/");
     }
   };
+
+
 
   return (
     <>
