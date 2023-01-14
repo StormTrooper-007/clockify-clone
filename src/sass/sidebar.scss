@@ -1,0 +1,39 @@
+.sidebar {
+    position: fixed;
+    height: 100%;
+    width: 300px;
+    z-index: 12;
+    background-color: white;
+    border: 1px solid black;
+
+    .sidebar_info_container {
+        margin:10px;
+        .sidebar_info_container_avatar {
+            height: 80px;
+            width: 80px;
+            border-radius: 100%;
+            background-color: lightgray;
+        }
+    }
+          
+    ul{
+      list-style-type: none;
+      padding: 0px;
+
+      li {
+        padding: 5px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        height: 50px;
+      }
+      li:hover{
+        background-color: #AFEEEE;
+        color: #039191;
+      }
+    }
+  }
+
+  .sidebar_button{
+    background-color: green;
+}

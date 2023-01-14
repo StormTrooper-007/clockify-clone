@@ -1,0 +1,17 @@
+.list_container{
+   display: flex;
+   justify-content: space-between;
+   border: 1px solid black;
+   padding: 10px;
+   .left_side{
+    div{
+        margin: 10px;
+    }
+   }
+   .right_side{
+    display: flex;
+    div{
+        margin: 10px;
+    }
+   }
+}
