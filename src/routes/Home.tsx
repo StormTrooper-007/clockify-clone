@@ -1,9 +1,9 @@
 import { Link, Navigate } from "react-router-dom";
-import "../sass/home.scss";
 import AddIcon from "@mui/icons-material/Add";
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Fab from "@mui/material/Fab";
+import "../sass/home.scss"
 
 type Props = {
   currentUser: any;

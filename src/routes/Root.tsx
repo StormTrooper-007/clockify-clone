@@ -1,7 +1,5 @@
-import React from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
-import "../sass/navbar.scss";
 import AppBar from "../components/AppBar";
 import Container from "@mui/material/Container";
 
