@@ -49,50 +49,53 @@ function Addentry({
   console.log(currentUser);
 
   if (currentUser.role !== "Personel") return <Navigate to="/notauthorized" />;
-
-  return (
-    <Box sx={{ m: 5 }}>
-      <Button
-        variant="contained"
-        sx={{ mt: 2, mb: 5, ml: 20, zIndex:-999}}
-        onClick={() => navigate("/time-entries")}
-      >
-        Time Entries <KeyboardArrowRightIcon />
-      </Button>
-      {!sidebar && <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DateTimePicker
-          renderInput={(props) => <TextField {...props} />}
-          label="DateTimePicker"
-          value={dateTime}
-          onChange={(newValue: any) => {
-            setDateTime(newValue);
-          }}
-        />
-      </LocalizationProvider>}
-      <Box>
-        <TextField
-          multiline
-          rows={3}
-          label="What are you working on?"
-          sx={{ m: 1, zIndex:-999 }}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setDesc(e.target.value)
-          }
-        />
-        <TextField
-          label="Task"
-          variant="outlined"
-          sx={{ m: 1, zIndex:-999 }}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setTask(e.target.value)
-          }
-        />
-        <Button variant="contained" sx={{ m: 1, zIndex:-999 }} onClick={saveTimeEntries}>
-          Save
+  if(sidebar){
+    return null
+  }else{
+    return (
+      <Box sx={{ m: 5 }}>
+        <Button
+          variant="contained"
+          sx={{ mt: 2, mb: 5, ml: 20}}
+          onClick={() => navigate("/time-entries")}
+        >
+          Time Entries <KeyboardArrowRightIcon />
         </Button>
-      </Box>
-    </Box>
-  );
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DateTimePicker
+            renderInput={(props) => <TextField {...props} />}
+            label="DateTimePicker"
+            value={dateTime}
+            onChange={(newValue: any) => {
+              setDateTime(newValue);
+            }}
+          />
+        </LocalizationProvider>
+        <Box>
+          <TextField
+            multiline
+            rows={3}
+            label="What are you working on?"
+            sx={{ m: 1 }}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setDesc(e.target.value)
+            }
+          />
+          <TextField
+            label="Task"
+            variant="outlined"
+            sx={{ m: 1}}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setTask(e.target.value)
+            }
+          />
+          <Button variant="contained" sx={{ m: 1 }} onClick={saveTimeEntries}>
+            Save
+          </Button>
+        </Box>
+        </Box>
+    );
+  } 
 }
 
 export default Addentry;

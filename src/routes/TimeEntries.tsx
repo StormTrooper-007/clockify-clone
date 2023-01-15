@@ -1,5 +1,5 @@
 import React from "react";
-import {Box, Button, Typography, Paper} from "@mui/material";
+import { Box, Button, Typography, Paper } from "@mui/material";
 import { Dayjs } from "dayjs";
 import { TimeEntriesI } from "../interface/interfaces";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
@@ -25,19 +25,27 @@ function TimeEntries({
 }: Props) {
   const navigate = useNavigate();
 
-  if (timeEntries.length === 0)
+  if (timeEntries?.length === 0)
     return (
-      <Paper>
-         <Typography variant="h5" sx={{ ml: 10 }}>
-        There is currently no Task
-      </Typography>
-      </Paper>
+      <>
+        <Button sx={{mt:5}} onClick={() => navigate(-1)}>back</Button>
+        <Paper>
+          <Typography variant="h5" sx={{ ml: 10, mt: 10 }}>
+            There is currently no Task
+          </Typography>
+        </Paper>
+      </>
     );
 
   return (
     <Box>
-      <Box sx={{ display: "flex", justifyContent: "space-between", margin: 5}}>
-        <Button variant="contained" size="small" onClick={() => navigate("/")} sx={{zIndex:-999}}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", margin: 5 }}>
+        <Button
+          variant="contained"
+          size="small"
+          onClick={() => navigate("/")}
+          sx={{ zIndex: -999 }}
+        >
           {" "}
           <KeyboardArrowLeftIcon />
           Home{" "}
@@ -46,7 +54,7 @@ function TimeEntries({
           variant="contained"
           size="small"
           onClick={() => navigate("/addentry")}
-          sx={{zIndex:-999}}
+          sx={{ zIndex: -999 }}
         >
           {" "}
           New Time Entry{" "}
