@@ -5,7 +5,6 @@ function useCountDown(targetDate: any) {
   const countDownDate = dayjs(targetDate);
   const [countDown, setCountDown] = useState<any>(countDownDate);
 
-  console.log(countDown);
 
   useEffect(() => {
     const interval = setInterval(() => {

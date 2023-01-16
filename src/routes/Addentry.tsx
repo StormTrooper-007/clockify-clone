@@ -46,8 +46,7 @@ function Addentry({
   }
 
   const navigate = useNavigate();
-  console.log(currentUser);
-
+ 
   if (currentUser.role !== "Personel") return <Navigate to="/notauthorized" />;
   if(sidebar){
     return null

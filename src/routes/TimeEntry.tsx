@@ -58,7 +58,7 @@ function TimeEntry({
   }
 
   return (
-    <Accordion sx={{zIndex:-999}}>
+    <Accordion>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
@@ -115,9 +115,6 @@ function TimeEntry({
                 <Button onClick={() => deleteTimeEntry(timeEntry.id)}>
                   End Task
                 </Button>
-              </MenuItem>
-              <MenuItem onClick={handleClose}>
-                <Button>home</Button>
               </MenuItem>
             </Menu>
           </Box>

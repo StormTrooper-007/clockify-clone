@@ -83,10 +83,10 @@ function App() {
               <TimeEntries
                 timeEntries={timeEntries}
                 setTimeEntries={setTimeEntries}
-                dateTime={dateTime}
                 setDateTime={setDateTime}
                 active={active}
                 setActive={setActive}
+                sidebar={sidebar}
               />
             }
           ></Route>

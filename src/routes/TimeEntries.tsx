@@ -9,28 +9,27 @@ import TimeEntry from "./TimeEntry";
 type Props = {
   timeEntries: TimeEntriesI[];
   setTimeEntries: React.Dispatch<React.SetStateAction<any>>;
-  dateTime: Dayjs;
   setDateTime: React.Dispatch<React.SetStateAction<Dayjs>>;
   active: any;
   setActive: React.Dispatch<React.SetStateAction<any>>;
+  sidebar:boolean
 };
 
 function TimeEntries({
   timeEntries,
-  setTimeEntries,
-  dateTime,
   setDateTime,
   active,
   setActive,
+  sidebar
 }: Props) {
   const navigate = useNavigate();
 
   if (timeEntries?.length === 0)
     return (
       <>
-        <Button sx={{mt:5}} onClick={() => navigate(-1)}>back</Button>
+        {!sidebar && <Button sx={{mt:5}} onClick={() => navigate("/addentry")}>back</Button>}
         <Paper>
-          <Typography variant="h5" sx={{ ml: 10, mt: 10 }}>
+          <Typography variant="h5" sx={{ ml: 10, mt: 10, p:10}}>
             There is currently no Task
           </Typography>
         </Paper>
@@ -44,7 +43,6 @@ function TimeEntries({
           variant="contained"
           size="small"
           onClick={() => navigate("/")}
-          sx={{ zIndex: -999 }}
         >
           {" "}
           <KeyboardArrowLeftIcon />
@@ -54,7 +52,6 @@ function TimeEntries({
           variant="contained"
           size="small"
           onClick={() => navigate("/addentry")}
-          sx={{ zIndex: -999 }}
         >
           {" "}
           New Time Entry{" "}

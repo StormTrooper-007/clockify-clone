@@ -22,7 +22,7 @@ function Message({ id }: Props) {
         variant="outlined"
         color="error"
         sx={{ ml: 25, mb: 40, mt: 2 }}
-        onClick={() => navigate("/")}
+        onClick={() => navigate("/time-entries")}
       >
         Close
       </Button>
