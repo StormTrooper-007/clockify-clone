@@ -57,8 +57,6 @@ function TimeEntry({
     setActive({ ...active, act: active.ids[i] });
   }
 
-  console.log(timeEntry.id);
-
   return (
     <Accordion sx={{zIndex:-999}}>
       <AccordionSummary

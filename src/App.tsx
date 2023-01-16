@@ -38,7 +38,7 @@ function App() {
     act: null,
     ids: [...timeEntries],
   });
-  console.log(timeEntries);
+  
   const [sidebar, setSidebar] = useState<boolean>(false);
   //@ts-ignore
   const [currentUser, setCurrentUser] = useState<any | null>(
