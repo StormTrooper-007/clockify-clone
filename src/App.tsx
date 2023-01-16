@@ -40,7 +40,6 @@ function App() {
   });
   console.log(timeEntries);
   const [sidebar, setSidebar] = useState<boolean>(false);
-  const [loginn, setLoginn] = useState<boolean>(false);
   //@ts-ignore
   const [currentUser, setCurrentUser] = useState<any | null>(
   //@ts-ignore
@@ -122,7 +121,6 @@ function App() {
                 password={password}
                 setPassword={setPassword}
                 users={users}
-                setLoginn={setLoginn}
                 setCurrentUser={setCurrentUser}
               />
             }

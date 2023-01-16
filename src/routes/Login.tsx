@@ -7,7 +7,6 @@ type Props = {
   password: string;
   setPassword: React.Dispatch<React.SetStateAction<any>>;
   users: any[];
-  setLoginn: React.Dispatch<React.SetStateAction<any>>;
   setCurrentUser: React.Dispatch<React.SetStateAction<any>>;
 };
 
@@ -17,7 +16,6 @@ function Login({
   password,
   setPassword,
   users,
-  setLoginn,
   setCurrentUser,
 }: Props) {
 
@@ -31,7 +29,6 @@ function Login({
       (user) => (user.email === email && user.password === password)
     );
     if (user) {
-      setLoginn(true);
       setCurrentUser(user);
       localStorage.setItem("user", JSON.stringify(user));
       navigate("/");

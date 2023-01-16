@@ -8,7 +8,7 @@ import {
   Select,
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   email: string;
@@ -25,7 +25,6 @@ function Register({
   email,
   setEmail,
   users,
-  setUsers,
   password,
   setPassword,
   role,
