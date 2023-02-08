@@ -1,46 +1,15 @@
-# Getting Started with Create React App
+The Health management systems App was developed using Typescript programming lanaguage on the react platform. The user Interface was designed using google's Material UI. A backend was no implement in this app instead data is stored in the browser's localstorage through the javascript API. This saves alot of time in setting up backend when we have this function in the browser ready to be utilized. However there is room for further development as the app can easily be extended and developed further with a solid backend service, that will allow for the distribution and connection of users over a real network system.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Since there is no backend API service, the javascript Notification and Navigator API was used as the means of Notification for patients and Healthcare personels. A timing package called "react-timer-hook" was also used to manageo calculationof the time.
 
-## Available Scripts
+In terms of usability, the App was designed with material ui, which offers many beautiful components for designing user interfaces, which makes the app very appealing and easy to use and understand. The react router is also one of the packages used here to make routing and navigating through pages easyy and automatic in situations like registering and logging into the app as a user.
 
-In the project directory, you can run:
+The code was written using VS code, whose very rich libraries for writing cleaning code helps to prevent bugs as much as possible. The app is also written in such as way that a third party can easily understand the code and extend it where necessary. To ensure cleaniness of the code the state management Library "redux-tool-kit" was used in order to avoid passing of variables as props to different components which makes the code a bit messier.
 
-### `npm start`
+A light security mechanism was impemented as well with react router to prevent unauthorized users from acessing certain pages meant for only the personels. Also input validations while logging in and registering were considered and handles using the react-hook-form and state with redux tool-kit.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Please feel free to expore the app and don't forget to leave any tip or advice while at it.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).

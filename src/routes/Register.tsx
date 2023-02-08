@@ -6,91 +6,163 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  FormControl,
+  Paper,
 } from "@mui/material";
-import { SelectChangeEvent } from "@mui/material/Select";
-import { useNavigate } from "react-router-dom";
+import DoneIcon from "@mui/icons-material/Done";
+import {
+  registerAsPatient,
+  registerAsPersonel,
+} from "../redux/slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useForm, Controller } from "react-hook-form";
+import { RootState } from "../redux/store";
+import Alert from "@mui/material/Alert";
 
-type Props = {
-  email: string;
-  setEmail: React.Dispatch<React.SetStateAction<any>>;
-  password: string;
-  setPassword: React.Dispatch<React.SetStateAction<any>>;
-  role: string;
-  setRole: React.Dispatch<React.SetStateAction<any>>;
-  users: any[];
-  setUsers: React.Dispatch<React.SetStateAction<any[]>>;
-};
+function Register() {
+  const { error } = useSelector((state: RootState) => state.users);
 
-function Register({
-  email,
-  setEmail,
-  users,
-  password,
-  setPassword,
-  role,
-  setRole,
-}: Props) {
-  const handleChange = (event: SelectChangeEvent) => {
-    setRole(event.target.value);
-  };
+  const dispatch = useDispatch();
 
-  const navigate = useNavigate();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+      name: "",
+      role: "",
+    },
+  });
 
-  function registerUser(email:any, password:any, role:any) {
-    const existingUser = users.find((user) => (user.email === email && user.password === password && user.role === role));
-    if (email === "" && password === "" && role === ""){
-      navigate(0);
-    }else if(existingUser){
-      navigate(0)
-    }else{
-      const newUser = [...users, { email, password, role }];
-      localStorage.setItem("users", JSON.stringify(newUser));
-      window.location.replace("/auth/login");
-    }
+  function registerCallback() {
+    window.location.replace("/login");
   }
 
+  function onSubmit(data: any) {
+    console.log(data);
+    role === "Patient"
+      ? dispatch(registerAsPatient(data))
+      : dispatch(registerAsPersonel(data));
+
+    return registerCallback();
+  }
+
+  const { role } = watch();
+
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", marginTop: 10 }}>
-      <Typography sx={{ ml: 16 }} variant="h6" component="p">
-        Register
-      </Typography>
-      <TextField
-        label="Email"
-        variant="outlined"
-        sx={{ m: 1 }}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setEmail(e.target.value)
-        }
-      />
-      <TextField
-        label="Password"
-        type="password"
-        variant="outlined"
-        sx={{ m: 1 }}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setPassword(e.target.value)
-        }
-      />
-      <InputLabel id="demo-select-small" sx={{ ml: 2 }}>
-        Role
-      </InputLabel>
-      <Select
-        labelId="demo-select-small"
-        id="demo-select-small"
-        value={role}
-        label="Role"
-        onChange={handleChange}
-      >
-        <MenuItem value="">
-          <em>None</em>
-        </MenuItem>
-        <MenuItem value={"Patient"}>Patient</MenuItem>
-        <MenuItem value={"Personel"}>Personel</MenuItem>
-      </Select>
-      <Button variant="contained" sx={{ m: 1, p: 2 }} onClick={() => registerUser(email, password, role)}>
-        Register
-      </Button>
-    </Box>
+    <Paper elevation={3}>
+      {error.registerMessage !== "" && (
+        <Alert severity="error">{error.registerMessage}</Alert>
+      )}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Box sx={{ display: "flex", flexDirection: "column", marginTop: 10 }}>
+          <Typography sx={{ ml: 16 }} variant="h6" component="p">
+            Register
+          </Typography>
+          <Controller
+            name="email"
+            control={control}
+            rules={{
+              required: "email is required",
+              pattern: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
+            }}
+            render={({ field }) => (
+              <TextField
+                label="Email"
+                variant="outlined"
+                sx={{ m: 1 }}
+                {...field}
+              />
+            )}
+          />
+          {errors.email && errors.email.type === "pattern" && (
+            <Alert severity="error">Email is invalid</Alert>
+          )}
+          {errors.email && (
+            <Alert severity="error">{errors.email?.message}</Alert>
+          )}
+          <Controller
+            name="password"
+            control={control}
+            rules={{
+              required: "password is required",
+
+              minLength: {
+                value: 8,
+                message: "Minimum length is 8",
+              },
+            }}
+            render={({ field }) => (
+              <TextField
+                label="Password"
+                type="password"
+                variant="outlined"
+                sx={{ m: 1 }}
+                {...field}
+              />
+            )}
+          />
+          {errors.password && (
+            <Alert severity="error">{errors.password?.message}</Alert>
+          )}
+          <Controller
+            name="name"
+            control={control}
+            rules={{ required: "Name is required" }}
+            render={({ field }) => (
+              <TextField
+                label="Name"
+                type="text"
+                variant="outlined"
+                sx={{ m: 1 }}
+                {...field}
+              />
+            )}
+          />
+          {errors.name && (
+            <Alert severity="error">{errors.name?.message}</Alert>
+          )}
+          <FormControl sx={{ m: 1, width: 300 }}>
+            <InputLabel id="demo-select-small" sx={{ ml: 2 }}>
+              Role
+            </InputLabel>
+            <Controller
+              name="role"
+              control={control}
+              rules={{ required: "role is required" }}
+              render={({ field }) => (
+                <Select
+                  labelId="demo-select-small"
+                  id="demo-select-small"
+                  label="Role"
+                  {...field}
+                >
+                  <MenuItem value={"Patient"}>Patient</MenuItem>
+                  <MenuItem value={"Personel"}>Personel</MenuItem>
+                </Select>
+              )}
+            />
+          </FormControl>
+          {errors.role && (
+            <Alert severity="error">{errors.role?.message}</Alert>
+          )}
+        </Box>
+        <Button
+          variant="contained"
+          type="submit"
+          size="medium"
+          startIcon={<DoneIcon />}
+          disabled={error.message === ""}
+          sx={{ ml: 10, mb: 3, mt: 3 }}
+        >
+          Register
+        </Button>
+      </form>
+    </Paper>
   );
 }
 

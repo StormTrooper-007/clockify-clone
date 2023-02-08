@@ -1,126 +1,195 @@
-import React, { useState } from "react";
-import { Box, MenuItem, Button, Menu } from "@mui/material";
+import React, { useEffect, useState } from "react";
+//Material UI Elements
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+import Grow from "@mui/material/Grow";
+import Paper from "@mui/material/Paper";
+import Popper from "@mui/material/Popper";
+import MenuItem from "@mui/material/MenuItem";
+import MenuList from "@mui/material/MenuList";
+import { Box, Button, Container, Typography } from "@mui/material";
+// Material UI Icons
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import { Link, useNavigate } from "react-router-dom";
-import { Dayjs } from "dayjs";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
+
+//from redux
+import {
+  deleteEntry,
+  addToCompletedList,
+} from "../redux/slices/timeEntriesSlice";
+import { useDispatch, useSelector } from "react-redux";
+
+// Timer Hook
+import { useTimer } from "react-timer-hook";
+import dayjs from "dayjs";
+import { Navigate, useNavigate } from "react-router-dom";
+import ProjectsDialog from "../components/ProjectsDialog";
+import { RootState } from "../redux/store";
 
 type Props = {
-  timeEntry: any;
-  timeEntries: any;
-  active: any;
-  setActive: React.Dispatch<React.SetStateAction<any>>;
-  setDateTime: React.Dispatch<React.SetStateAction<Dayjs>>;
+  entry: any;
 };
 
-function TimeEntry({
-  timeEntry,
-  timeEntries,
-  setDateTime,
-  active,
-  setActive,
-}: Props) {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+function TimeEntry({ entry }: Props) {
+  const [open, setOpen] = React.useState(false);
+  const anchorRef = React.useRef<HTMLButtonElement>(null);
+  const { currentUser } = useSelector((state: RootState) => state.users);
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleClose = (event: Event | React.SyntheticEvent) => {
+    if (
+      anchorRef.current &&
+      anchorRef.current.contains(event.target as HTMLElement)
+    ) {
+      return;
+    }
+
+    setOpen(false);
   };
+
+  function handleListKeyDown(event: React.KeyboardEvent) {
+    if (event.key === "Tab") {
+      event.preventDefault();
+      setOpen(false);
+    } else if (event.key === "Escape") {
+      setOpen(false);
+    }
+  }
+
+  // return focus to the button when we transitioned from !open -> open
+  const prevOpen = React.useRef(open);
+  React.useEffect(() => {
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current!.focus();
+    }
+    prevOpen.current = open;
+  }, [open]);
+
+  const dispatch = useDispatch();
+
+  function handleDelete(id: string) {
+    return dispatch(deleteEntry(id));
+  }
+
+  const { days, seconds, minutes, hours, start, pause } = useTimer({
+    expiryTimestamp: dayjs(entry.targetDate) as any,
+    onExpire: () => console.warn("onExpire called"),
+  });
+
+  useEffect(() => {
+    function showNotification() {
+      if (days + hours + minutes + seconds <= 0) {
+        navigator.vibrate([1000]);
+        let notification = new Notification("system's notification", {
+          body: ` ${entry.task} has to be done`,
+        });
+        dispatch(addToCompletedList(entry));
+        dispatch(deleteEntry(entry.id));
+        return notification;
+      }
+    }
+    showNotification();
+  }, [entry.task, hours, days, minutes, seconds, dispatch, entry]);
 
   const navigate = useNavigate();
 
-  function deleteTimeEntry(id: any) {
-    localStorage.setItem(
-      "timeEntries",
-      JSON.stringify(
-        timeEntries.filter((timeEntry: any) => timeEntry.id !== id)
-      )
-    );
-    navigate(0);
-  }
+  const [openDialog, setOpenDialog] = useState(false);
 
-  function handleDateTime(date: any, id: any) {
-    const i = timeEntries.findIndex((entry: any) => entry.id === id);
-    setDateTime(date);
-    handleActive(i);
-  }
+  const handleClickOpenDialog = () => {
+    setOpenDialog(true);
+  };
 
-  function handleActive(i: number) {
-    setActive({ ...active, act: active.ids[i] });
-  }
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  if (!currentUser) return <Navigate to="/auth/login" />;
 
   return (
-    <Accordion>
-      <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls="panel1a-content"
-        id="panel1a-header"
-      >
-        <Typography variant="h5" component="h4">
-          Task: {timeEntry.task}
-        </Typography>
-      </AccordionSummary>
-      <AccordionDetails>
-        <Typography>Description: {timeEntry.desc}</Typography>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Link to={`details/${timeEntry.id}`}>
-            <Box
-              onClick={() => handleDateTime(timeEntry.dateTime, timeEntry.id)}
-            >
-              <Button startIcon={<VisibilityIcon />}>View</Button>
-            </Box>
-          </Link>
-
-          <Box sx={{ mt: 2 }}>
-            <Button
-              id="demo-positioned-button"
-              aria-controls={open ? "demo-positioned-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
-              sx={{ mb: 2 }}
-              onClick={handleClick}
-            >
-              <MoreVertIcon />
+    <Container maxWidth="sm" sx={{ mt: 1 }}>
+      <Paper sx={{ display: "flex", justifyContent: "space-between", p: 3 }}>
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <Box>{entry.task}</Box>
+          <Box sx={{ display: "flex" }}>
+            <Typography>{days}</Typography>:<Typography>{hours}</Typography>:
+            <Typography>{minutes}</Typography>:
+            <Typography>{seconds}</Typography>
+          </Box>
+          <Box sx={{ display: "flex" }}>
+            <Button onClick={start}>
+              <PlayArrowIcon />
             </Button>
-            <Menu
-              id="demo-positioned-menu"
-              aria-labelledby="demo-positioned-button"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-            >
-              <MenuItem onClick={handleClose}>
-                <Button onClick={() => deleteTimeEntry(timeEntry.id)}>
-                  End Task
-                </Button>
-              </MenuItem>
-            </Menu>
+            <Button onClick={pause}>
+              <PauseIcon />
+            </Button>
           </Box>
         </Box>
-      </AccordionDetails>
-    </Accordion>
+        <Box>
+          <Button
+            ref={anchorRef}
+            id="composition-button"
+            aria-controls={open ? "composition-menu" : undefined}
+            aria-expanded={open ? "true" : undefined}
+            aria-haspopup="true"
+            onClick={handleToggle}
+          >
+            <MoreVertIcon />
+          </Button>
+          <Popper
+            open={open}
+            anchorEl={anchorRef.current}
+            role={undefined}
+            placement="bottom-start"
+            transition
+            disablePortal
+          >
+            {({ TransitionProps, placement }) => (
+              <Grow
+                {...TransitionProps}
+                style={{
+                  transformOrigin:
+                    placement === "bottom-start" ? "left top" : "left bottom",
+                }}
+              >
+                <Paper>
+                  <ClickAwayListener onClickAway={handleClose}>
+                    <MenuList
+                      autoFocusItem={open}
+                      id="composition-menu"
+                      aria-labelledby="composition-button"
+                      onKeyDown={handleListKeyDown}
+                    >
+                      <MenuItem onClick={() => handleDelete(entry.id)}>
+                        delete entry
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => navigate(`/addentry/${entry.id}`)}
+                      >
+                        edit entry
+                      </MenuItem>
+                      <MenuItem onClick={handleClose}>
+                        add to completed tasks
+                      </MenuItem>
+                      <MenuItem onClick={handleClickOpenDialog}>
+                        add to project
+                      </MenuItem>
+                    </MenuList>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Popper>
+          <ProjectsDialog
+            entry={entry}
+            openDialog={openDialog}
+            onClose={handleCloseDialog}
+          />
+        </Box>
+      </Paper>
+    </Container>
   );
 }
 

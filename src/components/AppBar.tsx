@@ -5,10 +5,10 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 
 type Props = {
-  handleSidebar: () => void;
+  
 };
 
-export default function ButtonAppBar({ handleSidebar }: Props) {
+export default function ButtonAppBar({}: Props) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -19,7 +19,6 @@ export default function ButtonAppBar({ handleSidebar }: Props) {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
-            onClick={handleSidebar}
           >
             <MenuIcon />
           </IconButton>

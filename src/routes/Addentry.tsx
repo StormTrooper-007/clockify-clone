@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import dayjs, { Dayjs } from "dayjs";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
@@ -6,95 +7,104 @@ import Button from "@mui/material/Button";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import { useNavigate, Navigate } from "react-router-dom";
+import { InputAdornment } from "@mui/material";
+import EventIcon from "@mui/icons-material/Event";
+import SaveIcon from "@mui/icons-material/Save";
+import DescriptionIcon from "@mui/icons-material/Description";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import { useDispatch } from "react-redux";
+import { add, edit, updateEntry } from "../redux/slices/timeEntriesSlice";
 
-type Props = {
-  dateTime: Dayjs;
-  setDateTime: React.Dispatch<React.SetStateAction<any>>;
-  desc: string;
-  setDesc: React.Dispatch<React.SetStateAction<any>>;
-  task: string;
-  setTask: React.Dispatch<React.SetStateAction<any>>;
-  timeEntries: any[];
-  setTimeEntries: React.Dispatch<React.SetStateAction<any>>;
-  currentUser: any;
-  sidebar:boolean
-};
+function Addentry() {
+  const [targetDate, setTargetDate] = useState<Dayjs>(dayjs());
+  const [description, setDescription] = useState<string>("");
+  const [task, setTask] = useState<string>("");
+  const [editMode, setEditMode] = useState(false);
 
-function Addentry({
-  desc,
-  setDesc,
-  task,
-  setTask,
-  dateTime,
-  setDateTime,
-  timeEntries,
-  setTimeEntries,
-  currentUser,
-  sidebar
-}: Props) {
-  function saveTimeEntries() {
-    const newEntries = [
-      ...timeEntries,
-      { id: new Date().getTime().toString(), dateTime, desc, task },
-    ];
-    localStorage.setItem("timeEntries", JSON.stringify(newEntries));
-    setDateTime(dayjs());
-    navigate(0);
-    console.log(timeEntries);
+  const dispatch = useDispatch();
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (id) {
+      setEditMode(true);
+      dispatch(edit(id));
+    }
+  }, [dispatch, id, editMode]);
+
+  function addTimeEntry() {
+    editMode === true && id
+      ? dispatch(updateEntry(id, targetDate, description, task))
+      : dispatch(add(targetDate, description, task));
+    setDescription("");
+    setTask("");
   }
 
-  const navigate = useNavigate();
- 
-  if (currentUser.role !== "Personel") return <Navigate to="/notauthorized" />;
-  if(sidebar){
-    return null
-  }else{
-    return (
-      <Box sx={{ m: 5 }}>
+  return (
+    <Box sx={{ display: "flex", flexDirection: "column" }}>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DateTimePicker
+          renderInput={(props) => <TextField {...props} />}
+          label="DateTimePicker"
+          value={targetDate}
+          onChange={(newValue: any) => {
+            setTargetDate(newValue);
+          }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <EventIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </LocalizationProvider>
+      <TextField
+        multiline
+        rows={3}
+        sx={{ mt: 2 }}
+        label="What are you working on?"
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setDescription(e.target.value)
+        }
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <DescriptionIcon />
+            </InputAdornment>
+          ),
+        }}
+        value={description}
+      />
+      <TextField
+        label="Task"
+        variant="outlined"
+        id="string"
+        sx={{ mt: 2 }}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setTask(e.target.value)
+        }
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <AssignmentIcon />
+            </InputAdornment>
+          ),
+        }}
+        value={task}
+      />
+      {
         <Button
           variant="contained"
-          sx={{ mt: 2, mb: 5, ml: 20}}
-          onClick={() => navigate("/time-entries")}
+          sx={{ mt: 3, p: 1 }}
+          onClick={addTimeEntry}
+          startIcon={<SaveIcon />}
         >
-          Time Entries <KeyboardArrowRightIcon />
+          {editMode === true ? "Update" : "Add A Task"}
         </Button>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DateTimePicker
-            renderInput={(props) => <TextField {...props} />}
-            label="DateTimePicker"
-            value={dateTime}
-            onChange={(newValue: any) => {
-              setDateTime(newValue);
-            }}
-          />
-        </LocalizationProvider>
-        <Box>
-          <TextField
-            multiline
-            rows={3}
-            label="What are you working on?"
-            sx={{ m: 1 }}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setDesc(e.target.value)
-            }
-          />
-          <TextField
-            label="Task"
-            variant="outlined"
-            sx={{ m: 1}}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setTask(e.target.value)
-            }
-          />
-          <Button variant="contained" sx={{ m: 1 }} onClick={saveTimeEntries}>
-            Save
-          </Button>
-        </Box>
-        </Box>
-    );
-  } 
+      }
+    </Box>
+  );
 }
 
 export default Addentry;
