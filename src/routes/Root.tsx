@@ -122,6 +122,8 @@ export default function Root() {
   const { currentUser } = useSelector((state: RootState) => state.users);
   const { error } = useSelector((state: RootState) => state.users);
 
+  console.log(mode)
+
   let colorStringVariable = lightAndDarkmood === true ? "light" : "dark";
   useEffect(() => {
     //@ts-ignore
