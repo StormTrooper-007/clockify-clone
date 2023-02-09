@@ -34,6 +34,9 @@ function TimeEntry({ entry }: Props) {
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLButtonElement>(null);
   const { currentUser } = useSelector((state: RootState) => state.users);
+  const { disableVibrationOnNotification } = useSelector(
+    (state: RootState) => state.settings
+  );
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -79,24 +82,33 @@ function TimeEntry({ entry }: Props) {
     onExpire: () => console.warn("onExpire called"),
   });
 
-  navigator.serviceWorker.register("sw.js");
+  navigator.serviceWorker.register("sw.js"); // regsiter service worker
 
   useEffect(() => {
     function showNotification() {
       if (days + hours + minutes + seconds <= 0) {
+        disableVibrationOnNotification === false && navigator.vibrate(2000);
         navigator.serviceWorker.ready.then((registration) => {
-          registration.showNotification("Systems Notification", {
-            body:` ${entry.task} has to be done`,
-            vibrate:[200, 100, 200, 100, 200, 100, 200],
-            tag:"systems-notification"
-          })
-        })
+          registration.showNotification("System Notification", {
+            body: ` ${entry.task} has to be done`,
+            tag: "systems-notification",
+          });
+        });
         dispatch(addToCompletedList(entry));
         dispatch(deleteEntry(entry.id));
       }
     }
     showNotification();
-  }, [entry.task, hours, days, minutes, seconds, dispatch, entry]);
+  }, [
+    entry.task,
+    hours,
+    days,
+    minutes,
+    seconds,
+    dispatch,
+    entry,
+    disableVibrationOnNotification,
+  ]);
 
   const navigate = useNavigate();
 

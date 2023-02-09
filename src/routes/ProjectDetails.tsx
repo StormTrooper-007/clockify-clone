@@ -3,7 +3,6 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
-  Button,
   List,
   ListItem,
   ListItemButton,
@@ -18,7 +17,6 @@ function ProjectDetails() {
   const { projects } = useSelector((state: RootState) => state.projects);
   return (
     <Box>
-      <Button>home</Button>
       {projects.map((project) => (
         <Accordion key={project.id}>
           <AccordionSummary

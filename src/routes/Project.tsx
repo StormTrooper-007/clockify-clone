@@ -7,6 +7,7 @@ import MenuList from "@mui/material/MenuList";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import CircleIcon from "@mui/icons-material/Circle";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditIcon from '@mui/icons-material/Edit';
 import { Box, Paper, Button, Typography } from "@mui/material";
 import { deleteProject } from "../redux/slices/projectsSlice";
 import { useDispatch } from "react-redux";
@@ -15,9 +16,11 @@ import { useNavigate } from "react-router-dom";
 
 type Props = {
   project: any;
+  setIsEdit:React.Dispatch<React.SetStateAction<boolean>>;
+  setId:React.Dispatch<React.SetStateAction<string>>;
 };
 
-function Project({ project }: Props) {
+function Project({ project, setIsEdit, setId}: Props) {
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLButtonElement>(null);
 
@@ -53,6 +56,7 @@ function Project({ project }: Props) {
       setOpen(false);
     }
   }
+
 
   let dispatch = useDispatch();
   let navigate = useNavigate();
@@ -117,6 +121,15 @@ function Project({ project }: Props) {
                       onClick={() => dispatch(deleteProject(project.id))}
                     >
                       <DeleteOutlineIcon /> Delete
+                    </MenuItem>
+                    <MenuItem
+                    onClick={() => {
+                      setIsEdit((prev) => !prev)
+                      setId(project.id)
+
+                    }}
+                    >
+                      <EditIcon/> Edit
                     </MenuItem>
                   </MenuList>
                 </ClickAwayListener>
