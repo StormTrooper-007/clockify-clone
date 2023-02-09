@@ -79,16 +79,20 @@ function TimeEntry({ entry }: Props) {
     onExpire: () => console.warn("onExpire called"),
   });
 
+  navigator.serviceWorker.register("sw.js");
+
   useEffect(() => {
     function showNotification() {
       if (days + hours + minutes + seconds <= 0) {
-        navigator.vibrate([1000]);
-        let notification = new Notification("system's notification", {
-          body: ` ${entry.task} has to be done`,
-        });
+        navigator.serviceWorker.ready.then((registration) => {
+          registration.showNotification("Systems Notification", {
+            body:` ${entry.task} has to be done`,
+            vibrate:[200, 100, 200, 100, 200, 100, 200],
+            tag:"systems-notification"
+          })
+        })
         dispatch(addToCompletedList(entry));
         dispatch(deleteEntry(entry.id));
-        return notification;
       }
     }
     showNotification();
