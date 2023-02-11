@@ -124,7 +124,7 @@ export default function Root() {
 
   console.log(mode)
 
-  let colorStringVariable = lightAndDarkmood === true ? "light" : "dark";
+  let colorStringVariable = lightAndDarkmood === false ? "light" : "dark";
   useEffect(() => {
     //@ts-ignore
     setMode(colorStringVariable);

@@ -74,12 +74,12 @@ function Project({ project, setIsEdit, setId}: Props) {
       <Box>
         <CircleIcon sx={{ fontSize: 10, color: getColor(colors) }} />
       </Box>
-      <Button variant="text">
+      <Button variant="text" sx={{textTransform:"none"}}>
         <Typography
           sx={{ ml: 2, mr: 2 }}
           onClick={() => navigate(`/projects/details/${project.id}`)}
         >
-          {project.projectName}
+          {project.projectName.toLowerCase()}
         </Typography>
       </Button>
       <Box>

@@ -12,12 +12,12 @@ function CompletedProjects() {
   const dispatch = useDispatch();
 
   if (completedList.length === 0)
-    return <Typography component="p">no timeouts for now</Typography>;
+    return <Typography component="p">No timeouts for now</Typography>;
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       {completedList.map((element: any) => (
-        <Paper elevation={1} key={element.id} sx={{ p: 2 }}>
+        <Paper elevation={1} key={element.id} sx={{ p: 2, mb:2 }}>
           <Typography component="p">TaskId: {element.id}</Typography>
           <Typography component="p">Task: {element.task}</Typography>
           <Typography component="p">
